@@ -1,10 +1,26 @@
 window.onload = function() {
-  document.getElementById("get-nominations").onclick = getNominations;
+  document.getElementById("get-nominations").onclick = testServer;
   document.getElementById("get-nominees").onclick = getNominees;
   }
 
-function printBob() {
-   document.getElementById("output").innerHTML = "Bob";
+function formValid(form) {
+   let nominfo = form.nomInfo.value;
+   let nom = form.nominee.value;
+   let info =  form.info.value;
+   if(nominfo != "" && (nom != "" || info != "")) {
+      alert("If you use the 'Nominee or Info' box please leave the 'Nominee' and 'Info' boxes empty");
+      return false;
+   } else {
+      return true;
+   }
+}
+
+function testServer() {
+   fetch("http://localhost:8080/nominations")
+      .then((response) => response.text())
+      .then((data) => {
+         document.getElementById("output").innerHTML = data;
+      });
 }
 
 function getNominations() {
@@ -29,37 +45,7 @@ function getNominations() {
   });
    }
 
-function formValid(form) {
-   let nominfo = form.nomInfo.value;
-   let nom = form.nominee.value;
-   let info =  form.info.value;
-   if(nominfo != "" && (nom != "" || info != "")) {
-      alert("If you use the 'Nominee or Info' box please leave the 'Nominee' and 'Info' boxes empty");
-      return false;
-   } else {
-      return true;
-   }
-}
-
-function testNominees() {
-   const nominees = ["Meryl Streep", "Up", "Tony Stark", "Up", "Meryl Streep", "Up"];
-   let count = {};
-   for (el of nominees) {
-  if (count[el]) {
-     count[el] += 1;
-  } else {
-     count[el] = 1;
-  }
-   };
-   const entries = Object.entries(count);
-   let output = "<table><tr><th>Nominee</th><th>Number of Times</th></tr>"
-   for (entry of entries)
-  output = output +"<tr> <td>" + entry[0] + "</td> <td>" + entry[1] + "</td> </tr>"
-   console.log(count);
-   document.getElementById("output").innerHTML = output + "</table>";  
-}
-
-function getNominees() {
+   function getNominees() {
    if(!formValid(this.form)) {
       return false;
    };
