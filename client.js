@@ -8,7 +8,10 @@ function printBob() {
 }
 
 function getNominations() {
-  fetch("oscars.json")
+   if(!formValid(this.form)) {
+      return false;
+   };
+   fetch("oscars.json")
   .then((response) => response.json())
   .then((data) => {
   let output = "<table id=\"results\"><tr><th>Year</th><th>Category</th><th>Nominee</th><th>Info</th><th>Won?</th></tr>";
@@ -25,6 +28,18 @@ function getNominations() {
   document.getElementById("output").innerHTML = `${output}</table> <br> <p>Number of results is: ${rows}</p> `;
   });
    }
+
+function formValid(form) {
+   let nominfo = form.nomInfo.value;
+   let nom = form.nominee.value;
+   let info =  form.info.value;
+   if(nominfo != "" && (nom != "" || info != "")) {
+      alert("If you use the 'Nominee or Info' box please leave the 'Nominee' and 'Info' boxes empty");
+      return false;
+   } else {
+      return true;
+   }
+}
 
 function testNominees() {
    const nominees = ["Meryl Streep", "Up", "Tony Stark", "Up", "Meryl Streep", "Up"];
@@ -45,6 +60,9 @@ function testNominees() {
 }
 
 function getNominees() {
+   if(!formValid(this.form)) {
+      return false;
+   };
    fetch("oscars.json")
    .then((response) => response.json())
    .then((data) => {
