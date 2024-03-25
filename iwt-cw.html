@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" name="Author" content="Maurane van der Stoep">
+<title>oscars info</title>
+<script type="text/javascript" src="client.js"></script>
+<style>
+	table {
+	  width: 30%;
+	  border-collapse: collapse;
+	  margin-left: auto;
+	  margin-right: auto;
+	}
+	td, th {
+	  text-align: left;
+	  padding: 20px;
+	}
+  </style>
+</head>
+
+<body>
+
+	<h1>Oscars</h1>
+	<form id="oscarsquery">
+		<label for="year">Year:</label><br>
+		<input type ="text" id="year" name ="year"><br>
+		<label for="category">Category:</label><br>
+		<input type ="text" id="category" name="category"><br>
+		<label for="nominee">Nominee:</label><br>
+		<input type="text" id="nominee" name="nominee"><br>
+		<label for="info">Info:</label><br>
+		<input type="text" id="info" name="info"><br>
+		
+		<label for="nomInfo">Nominee or info</label><br>
+		<input type="text" id="nomInfo" name="nomInfo"><br>
+		<!-- enter a value which could appear in either the Nominee or Info elements. 
+			This is useful for retrieving nominations where, e.g., a person has been nominated 
+			either as an actor or as a director. If a user enters a value in this box, they 
+			should not enter a value in either the nominee or info boxes; if they do, an error 
+			should be produced, warning them of this.
+		-->
+		<!--  consider if name can actually all be input -->
+
+		<label for="times">Number of times</label><br>
+		<input type="number" id="times" name="times"><br>
+		<!--  There should also be a text box in which to enter the number of
+			times a nominee has won or been nominated. This value is only used	
+			when the "nominees" button is clicked. The results returned in this
+			case should include only those nominees who have won, not won or
+			both (depending on the user's selection) at least as many times as
+			the number entered in the text box. 
+		-->
+
+		<input type="button" value="Get nominations" id="get-nominations" name="nominations"><br>
+		<input type="button" value ="Get nominees" id="get-nominees" name="nominees"><br>
+		<input type="reset" value="Clear input" id="clear-input" name="cleari"><br>
+		<input type="button" value="Clear output" id="clear-output" name="clearo"><br>
+
+		<label for="outcome">Choose outcome:</label>
+		<select id = "won" name="won">
+			<option value="yes">won</option>
+			<option value="no">did not win</option>
+			<option value="">both</option>
+		</select>
+		<!--  consider if the above should be bound to onchange event handler so that results can be repeated or just onclick -->
+		
+	</form>
+
+    <div id="output">
+    This is where the output goes</div>
+	<!-- When nominations are retrieved, the number of results returned should be given after the table. -->
+	<!--for Specifies the relationship between the result of the calculation, and 
+		the elements used in the calculation.
+		as well as an area for outputting results below the form
+	-->
+</body>
+</html>
