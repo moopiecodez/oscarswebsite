@@ -15,63 +15,78 @@
 	  text-align: left;
 	  padding: 20px;
 	}
+	h1, p {
+		text-align: justify;
+	}
   </style>
 </head>
 
 <body>
 
 	<h1>Oscars</h1>
+	<p>
+		You can find out the Oscar Nominations or Nominees using the form below.
+		<br> For Nominations you can narrow results by year, category, nominee,
+		 info and whether or not they won. <br>
+		 Alternatively you can include a restriction in the <strong> Nominee or 
+		info</strong> box which will check if your criteria can be found in 
+		either the	nominee or info	sections. <br>
+		If you use the <strong>Nominee or info</strong> box, please leave both 
+		the <strong>Nominee</strong> and <strong>Info</strong> boxes empty.<br>
+		To get Nominees, click on the Nominees button, you can narrow results by
+		whether or not they won and how many times.
+	</p>
 	<form id="oscarsquery">
-		<label for="year">Year:</label><br>
+		<label for="year">Year: (select by calendar year)</label><br>
 		<input type ="text" id="year" name ="year"><br>
-		<label for="category">Category:</label><br>
+		<label for="category">
+			Category: <br>(e.g. Best Picture, or Actor etc.)
+		</label><br>
 		<input type ="text" id="category" name="category"><br>
-		<label for="nominee">Nominee:</label><br>
+		<label for="nominee">
+			Nominee: <br>(select the person or name of the film)
+		</label><br>
 		<input type="text" id="nominee" name="nominee"><br>
-		<label for="info">Info:</label><br>
+		<label for="info">
+			Info: <br>(e.g. if the category is "Actress -- Leading Role, this 
+			contains the name of the film and the character played by the 
+			actress in it)
+		</label><br>
 		<input type="text" id="info" name="info"><br>
 		
-		<label for="nomInfo">Nominee or info</label><br>
+		<label for="nomInfo">
+			Nominee or info: <br> (enter value to be checked against the Nominee
+			 or Info criteria)
+		</label><br>
 		<input type="text" id="nomInfo" name="nomInfo"><br>
-		<!-- enter a value which could appear in either the Nominee or Info elements. 
-			This is useful for retrieving nominations where, e.g., a person has been nominated 
-			either as an actor or as a director. If a user enters a value in this box, they 
-			should not enter a value in either the nominee or info boxes; if they do, an error 
-			should be produced, warning them of this.
-		-->
-		<!--  consider if name can actually all be input -->
 
-		<label for="times">Number of times</label><br>
+		<label for="times">
+			Number of times: <br>(how often the nominee, won, did not win, or 
+			both depending on which option is chosen below)
+		</label><br>
 		<input type="number" id="times" name="times"><br>
-		<!--  There should also be a text box in which to enter the number of
-			times a nominee has won or been nominated. This value is only used	
-			when the "nominees" button is clicked. The results returned in this
-			case should include only those nominees who have won, not won or
-			both (depending on the user's selection) at least as many times as
-			the number entered in the text box. 
-		-->
 
-		<input type="button" value="Get nominations" id="get-nominations" name="nominations"><br>
-		<input type="button" value ="Get nominees" id="get-nominees" name="nominees"><br>
-		<input type="reset" value="Clear input" id="clear-input" name="cleari"><br>
-		<input type="button" value="Clear output" id="clear-output" name="clearo"><br>
-
+		<br>
 		<label for="outcome">Choose outcome:</label>
 		<select id = "won" name="won">
+			<option value="">both</option>
 			<option value="yes">won</option>
 			<option value="no">did not win</option>
-			<option value="">both</option>
-		</select>
-		<!--  consider if the above should be bound to onchange event handler so that results can be repeated or just onclick -->
+		</select> <br>
+
+		<br>
+		<input type="button" value="Get nominations" id="get-nominations" 
+			name="nominations"><br>
+		<input type="button" value ="Get nominees" id="get-nominees" 
+			name="nominees"><br>
+		<input type="reset" value="Clear input" id="clear-input" 
+			name="cleari"><br>
+		<input type="button" value="Clear output" id="clear-output" 
+			name="clearo"><br>
+
 		
 	</form>
-
-    <div id="output">
-    This is where the output goes</div>
-	<!-- When nominations are retrieved, the number of results returned should be given after the table. -->
-	<!--for Specifies the relationship between the result of the calculation, and 
-		the elements used in the calculation.
-		as well as an area for outputting results below the form
-	-->
+	<!-- where the output will be rendered-->
+    <div id="output"></div>
 </body>
 </html>
