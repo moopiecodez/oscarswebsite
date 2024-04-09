@@ -1,84 +1,71 @@
 const express = require('express');
 const oscars = require('./oscars.json');
+const req = require('express/lib/request');
 const app = express();
 const port = 8080;
 
-/*
-const oscarNominees = {
-  Nominee: oscars.Nominee,
-  Won: oscars.Won
+//Checks the query string submitted by a nominations request for errors
+function checkQuery(req) {
+  if (req.query.year != "" && (isNaN(req.query.year) || req.query.year < 1960 || req.query.year > 2010))
+    return {error: "Please enter a valid year between 1960 and 2010."};
+  if(!oscars.find(oscar => oscar.Category.includes(req.query.category)))
+    return {error: "That is not a valid category."};
+  if(!oscars.find(oscar => oscar.Nominee.includes(req.query.nomInfo)) &&
+     !oscars.find(oscar => oscar.Info.includes(req.query.nomInfo)))
+    return {error: "That is not a valid nominee or info criteria."};
+  if(!oscars.find(oscar => oscar.Nominee.includes(req.query.nominee)))
+    return {error: "That is not a valid nominee."};
+  if(!oscars.find(oscar => oscar.Info.includes(req.query.info)))
+    return {error: "That is not a valid info criteria."};
+  return "";
 };
-*/
 
+/*
+  Handles a GET request submitted by clicking on the nominations button.
+  Serves an error to the client if the parameters are not found in the 
+  oscars.json file, for Year parameter an error is returned if the query is not 
+  in the range 1960 to 2010.
+*/
 app.get("/nominations", (req, res) => {
-  console.log(req.query); 
-  console.log(typeof req.query.year);
-  let num = oscars.length;
-  console.log(num)
-  //console.log(oscars.toString());
-  const output = oscars.filter(function(oscar) {
-    //console.log(oscar.Year);
-    //return oscar.Year == req.query.year;
-    let include = true;
-    if (req.query.year != "") {
-      if (!oscar.Year.includes(req.query.year)) {
+  let output = checkQuery(req);
+  if (output != "") {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.json(output);
+    return;
+  }
+  output = oscars.filter(function(oscar) {
+    if (req.query.year != "" && (!oscar.Year.includes(req.query.year))) {
         return false;
       }
-    }
-    if (req.query.category != "") {
-      if (!oscar.Category.includes(req.query.category)) {
+    if (req.query.category != "" &&
+        (!oscar.Category.includes(req.query.category))) {
         return false;
       }
-    }
-    if (req.query.won != "") {
-      if (!oscar.Won.includes(req.query.won)) {
+    if (req.query.won != "" && (!oscar.Won.includes(req.query.won))) {
         return false;
       }
-    }
-    if (req.query.nomInfo != "") {
-      if ((!oscar.Nominee.includes(req.query.nomInfo)) && 
-          (!oscar.Info.includes(req.query.nomInfo))) {
+    if (req.query.nomInfo != "" && 
+        ((!oscar.Nominee.includes(req.query.nomInfo)) && 
+          (!oscar.Info.includes(req.query.nomInfo)))) {
             return false;
       }
-    }
-    if (req.query.nominee != "") {
-      if(!oscar.Nominee.includes(req.query.nominee)) {
+    if (req.query.nominee != "" && (!oscar.Nominee.includes(req.query.nominee))) {
         return false;
       }
-    }
-    if (req.query.info != "") {
-      if(!oscar.Info.includes(req.query.info)) {
+    if (req.query.info != "" && (!oscar.Info.includes(req.query.info))) {
         return false;
       }
-    }
     return true;
-/*
-    if (req.query.nomInfo === "") {
-      return (oscar.Year.includes(req.query.year) && 
-              oscar.Category.includes(req.query.category) &&
-              oscar.Nominee.includes(req.query.nominee) &&
-              oscar.Info.includes(req.query.info)) &&
-              oscar.Won.includes(req.query.won);
-    } else {
-      return (oscar.Year.includes(req.query.year) && 
-              oscar.Category.includes(req.query.category) &&
-              (oscar.Nominee.includes(req.query.nomInfo) ||
-              oscar.Info.includes(req.query.nomInfo)) &&
-              oscar.Won.includes(req.query.won));
-    }
-*/
-    //need to account for [] in info  
   });
-  
-  for(ele of output) {
-    console.log("Ele is" + ele);  
-  };
-  console.log("the output" + output);
   res.header('Access-Control-Allow-Origin', "*");
-  //res.send("Hello World! How are you?");
   res.json(output);
 });
 
+/*
+  Handles a GET request submitted by clicking on the nominees button. 
+  Returns an error to the client if the number of times parameter submitted is 
+  too high.
+*/
 app.get("/nominees", (req, res) => {
   console.log(req.query);
   let counter = {};
@@ -91,39 +78,26 @@ app.get("/nominees", (req, res) => {
       }
     }
    };
-  
-   // question return in array format or objects format?
    let output = Object.entries(counter);
-   console.log(output);
-   if(req.query.times != "") {
+   let result = "either won or not won";
+   if(req.query.won === "yes")
+    result = "won";
+   if(req.query.won ==="no")
+    result = "not won";
+
+     if (req.query.times != "") {
+      if (!output.find(element => element[1] >= req.query.times)) {
+      output = {error: "No nominee has " + result + " at least as many times as specified."};
+    } else {
     output = output.filter(function(element) {
       return element[1] >=req.query.times;
-    })
-    counter = output.map(element => ({
-      Nominee: element[0],
-      Times: element[1]
-    }));
+    })}   
    };
-   console.log(counter);
   
   res.header('Access-Control-Allow-Origin', "*");
-  let message = "Hello the nominees are..."
   res.json(output);  
 })
 
 var server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);
 });
-
-
-/*
-app.get("/nominations", (req, res) => {
-  console.log(req.query); 
-  const results = oscars.filter(function(nominee) {
-    return nominee.Category === req.query.Category.value;
-  })
-  res.header('Access-Control-Allow-Origin', "*");
-  //res.send("Hello World! How are you?");
-  res.json(results);
-});
-*/
